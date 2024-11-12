@@ -24,6 +24,13 @@ const handleFormClose = () => {
 const handleFormOpen = () => {
   mode.value = "create";
 };
+
+const handleCreateTodo = () => {
+  /**
+   * todo의 데이터 구조는
+   * {id: Date.now(), todo: todoData, priority: "p1"..}
+   */
+};
 </script>
 
 <style scoped>
