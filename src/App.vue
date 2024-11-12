@@ -1,30 +1,39 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div id="phone">
+    <header>
+      <span>9:56</span>
+      <div>
+        <font-awesome-icon :icon="['fas', 'signal']" />
+        <font-awesome-icon :icon="['fas', 'wifi']" />
+        <font-awesome-icon :icon="['fas', 'battery-three-quarters']" />
+      </div>
+    </header>
+    <Container />
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
+<script setup lang="ts">
+import Container from "./components/Container.vue";
+</script>
+
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+#phone {
+  width: 393px;
+  height: 852px;
+  background-color: white;
+  border-radius: 48px;
+  box-shadow: 0px 0px 30px 2px #909090;
+  position: relative;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+header {
+  height: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 32px;
+  svg {
+    margin-left: 4px;
+  }
 }
 </style>
