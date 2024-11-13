@@ -1,7 +1,7 @@
 <template>
   <div id="phone">
     <header>
-      <span>9:56</span>
+      <span>{{ currentHour }}:{{ currentMinute }}</span>
       <div>
         <font-awesome-icon :icon="['fas', 'signal']" />
         <font-awesome-icon :icon="['fas', 'wifi']" />
@@ -14,6 +14,10 @@
 
 <script setup lang="ts">
 import Container from "./components/Container.vue";
+
+const now = new Date();
+const currentHour = now.getHours(); // 시
+const currentMinute = now.getMinutes(); // 분
 </script>
 
 <style scoped>
@@ -33,7 +37,7 @@ header {
   align-items: center;
   padding: 20px 32px;
   svg {
-    margin-left: 4px;
+    margin-left: 8px;
   }
 }
 </style>
