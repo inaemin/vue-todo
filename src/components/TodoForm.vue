@@ -1,6 +1,6 @@
 <template>
   <div id="todoForm">
-    <form @submit.prevent="onSubmit">
+    <form ref="formRef" @submit.prevent="onSubmit">
       <h2>할 일 등록</h2>
       <div class="title">할 일 내용</div>
       <input @input="onInput" />
@@ -49,7 +49,7 @@
 import { ref } from "vue";
 import PriorityButton from "./PriorityButton.vue";
 
-const emit = defineEmits(["formClose"]);
+const emit = defineEmits(["formClose", "createTodo"]);
 
 const priorityData = ref({
   p1: "중요함-긴급함",
@@ -62,6 +62,7 @@ const mode = ref("create");
 
 const todoData = ref("");
 const priority = ref("p1");
+const formRef = ref(null);
 
 const onInput = (e) => {
   todoData.value = e.target.value;
@@ -72,11 +73,31 @@ const onClickPriority = (e) => {
 };
 
 const onSubmit = (e) => {
-  console.log(todoData.value);
-  console.log(priority.value);
+  const newTodo = {
+    id: Date.now(),
+    todo: todoData.value,
+    priority: priority.value,
+    isCompleted: false,
+  };
+  emit("createTodo", newTodo);
+  onFormClose();
 };
 
-const onContinueSubmit = (e) => {};
+const onContinueSubmit = (e) => {
+  const newTodo = {
+    id: Date.now(),
+    todo: todoData.value,
+    priority: priority.value,
+    isCompleted: false,
+  };
+  emit("createTodo", newTodo);
+  // 폼 초기화
+  if (formRef.value) {
+    formRef.value.reset();
+    todoData.value = "";
+    priority.value = "p1";
+  }
+};
 
 const onFormClose = (e) => {
   emit("formClose");

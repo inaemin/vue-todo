@@ -6,18 +6,45 @@
     <div class="category">
       <span class="vertical">중요함</span>
     </div>
-    <TodoBox />
-    <TodoBox />
+    <TodoBox :todoData="p1Data" @todo-complete="handleTodoComplete" />
+    <TodoBox :todoData="p2Data" @todo-complete="handleTodoComplete" />
     <div class="category">
       <span class="vertical">중요하지않음</span>
     </div>
-    <TodoBox />
-    <TodoBox />
+    <TodoBox :todoData="p3Data" @todo-complete="handleTodoComplete" />
+    <TodoBox :todoData="p4Data" @todo-complete="handleTodoComplete" />
   </div>
 </template>
 
 <script setup lang="ts">
 import TodoBox from "./TodoBox.vue";
+import { computed } from "vue";
+
+const props = defineProps({
+  todoListData: {
+    type: Array,
+    required: true,
+  },
+});
+
+const emit = defineEmits(["todoComplete"]);
+
+const p1Data = computed(() =>
+  props.todoListData.filter((el) => el.priority === "p1")
+);
+const p2Data = computed(() =>
+  props.todoListData.filter((el) => el.priority === "p2")
+);
+const p3Data = computed(() =>
+  props.todoListData.filter((el) => el.priority === "p3")
+);
+const p4Data = computed(() =>
+  props.todoListData.filter((el) => el.priority === "p4")
+);
+
+const handleTodoComplete = (todo) => {
+  emit("todoComplete", todo);
+};
 </script>
 <style>
 #todoList {
@@ -26,7 +53,6 @@ import TodoBox from "./TodoBox.vue";
   grid-template-columns: 20px 1fr 1fr;
   grid-template-rows: 20px 1fr 1fr;
   padding: 0px 32px 16px 16px;
-  /* gap: 16x; */
 }
 
 .category {
