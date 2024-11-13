@@ -39,6 +39,11 @@ const onTodoModifyOrDelete = (todo) => {
   margin: 4px;
   padding: 16px 8px;
   border-radius: 8px;
+  overflow-y: auto;
+  /* 스크롤바 스타일링 (webkit 기반 브라우저) */
+  &::-webkit-scrollbar {
+    display: none;
+  }
   ul {
     li {
       display: flex;
@@ -50,6 +55,11 @@ const onTodoModifyOrDelete = (todo) => {
         width: 20px;
         height: 20px;
         accent-color: var(--background-color);
+      }
+      p {
+        &:hover {
+          cursor: pointer;
+        }
       }
     }
     .completed {
