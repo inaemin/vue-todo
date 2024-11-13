@@ -6,13 +6,29 @@
     <div class="category">
       <span class="vertical">중요함</span>
     </div>
-    <TodoBox :todoData="p1Data" @todo-complete="handleTodoComplete" />
-    <TodoBox :todoData="p2Data" @todo-complete="handleTodoComplete" />
+    <TodoBox
+      :todoData="p1Data"
+      @todo-complete="handleTodoComplete"
+      @todo-modify-or-delete="handleTodoModifyOrDelete"
+    />
+    <TodoBox
+      :todoData="p2Data"
+      @todo-complete="handleTodoComplete"
+      @todo-modify-or-delete="handleTodoModifyOrDelete"
+    />
     <div class="category">
       <span class="vertical">중요하지않음</span>
     </div>
-    <TodoBox :todoData="p3Data" @todo-complete="handleTodoComplete" />
-    <TodoBox :todoData="p4Data" @todo-complete="handleTodoComplete" />
+    <TodoBox
+      :todoData="p3Data"
+      @todo-complete="handleTodoComplete"
+      @todo-modify-or-delete="handleTodoModifyOrDelete"
+    />
+    <TodoBox
+      :todoData="p4Data"
+      @todo-complete="handleTodoComplete"
+      @todo-modify-or-delete="handleTodoModifyOrDelete"
+    />
   </div>
 </template>
 
@@ -27,7 +43,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["todoComplete"]);
+const emit = defineEmits(["todoComplete", "todoModifyOrDelete"]);
 
 const p1Data = computed(() =>
   props.todoListData.filter((el) => el.priority === "p1")
@@ -44,6 +60,10 @@ const p4Data = computed(() =>
 
 const handleTodoComplete = (todo) => {
   emit("todoComplete", todo);
+};
+
+const handleTodoModifyOrDelete = (todo) => {
+  emit("todoModifyOrDelete", todo);
 };
 </script>
 <style>

@@ -8,7 +8,7 @@
             @click="onClickComplete(todo)"
             :checked="todo.isCompleted"
           />
-          <p>
+          <p @click="onTodoModifyOrDelete(todo)">
             {{ todo.todo }}
           </p>
         </li>
@@ -22,10 +22,14 @@ const props = defineProps({
   todoData: Object,
 });
 
-const emit = defineEmits(["todoComplete"]);
+const emit = defineEmits(["todoComplete", "todoModifyOrDelete"]);
 
 const onClickComplete = (todo) => {
   emit("todoComplete", todo);
+};
+
+const onTodoModifyOrDelete = (todo) => {
+  emit("todoModifyOrDelete", todo);
 };
 </script>
 
@@ -39,6 +43,7 @@ const onClickComplete = (todo) => {
     li {
       display: flex;
       align-items: center;
+      word-break: break-word;
       input {
         margin-right: 8px;
         width: 20px;

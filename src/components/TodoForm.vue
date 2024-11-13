@@ -1,9 +1,9 @@
 <template>
   <div id="todoForm">
     <form ref="formRef" @submit.prevent="onSubmit">
-      <h2>할 일 등록</h2>
+      <h2>할 일 {{ mode === `create` ? `등록` : `수정` }}</h2>
       <div class="title">할 일 내용</div>
-      <input @input="onInput" />
+      <input @input="onInput" :value="todoText" />
       <div class="title">{{ priorityData[priority] }}</div>
       <div class="priority">
         <PriorityButton
@@ -37,7 +37,12 @@
             class="delete"
             @click.prevent="onTodoDelete"
           />
-          <input value="수정" type="submit" class="update" />
+          <input
+            value="수정"
+            type="submit"
+            class="update"
+            @click.prevent="onTodoModify"
+          />
           <input value="취소" type="submit" @click.prevent="onFormClose" />
         </div>
       </div>
@@ -49,7 +54,24 @@
 import { ref } from "vue";
 import PriorityButton from "./PriorityButton.vue";
 
-const emit = defineEmits(["formClose", "createTodo"]);
+interface Todo {
+  todo: string;
+  priority: string;
+  isCompleted: boolean;
+  id: number;
+}
+
+const props = defineProps<{
+  todoData?: Todo; // optional
+  mode?: string; // optional
+}>();
+
+const emit = defineEmits([
+  "formClose",
+  "createTodo",
+  "modifyTodo",
+  "deleteTodo",
+]);
 
 const priorityData = ref({
   p1: "중요함-긴급함",
@@ -58,44 +80,53 @@ const priorityData = ref({
   p4: "중요하지않음-긴급하지않음",
 });
 
-const mode = ref("create");
-
-const todoData = ref("");
-const priority = ref("p1");
+const todoText = ref(props.todoData?.todo || "");
+const priority = ref(props.todoData?.priority || "p1");
 const formRef = ref(null);
 
 const onInput = (e) => {
-  todoData.value = e.target.value;
+  todoText.value = e.target.value;
 };
 
 const onClickPriority = (e) => {
   priority.value = e;
 };
 
+const validateForm = () => {
+  if (!!todoText.value.trim()) {
+    return true;
+  }
+  window.alert(`내용을 입력해주세요.`);
+};
+
 const onSubmit = (e) => {
-  const newTodo = {
-    id: Date.now(),
-    todo: todoData.value,
-    priority: priority.value,
-    isCompleted: false,
-  };
-  emit("createTodo", newTodo);
-  onFormClose();
+  if (validateForm()) {
+    const newTodo = {
+      id: Date.now(),
+      todo: todoText.value,
+      priority: priority.value,
+      isCompleted: false,
+    };
+    emit("createTodo", newTodo);
+    onFormClose();
+  }
 };
 
 const onContinueSubmit = (e) => {
-  const newTodo = {
-    id: Date.now(),
-    todo: todoData.value,
-    priority: priority.value,
-    isCompleted: false,
-  };
-  emit("createTodo", newTodo);
-  // 폼 초기화
-  if (formRef.value) {
-    formRef.value.reset();
-    todoData.value = "";
-    priority.value = "p1";
+  if (validateForm()) {
+    const newTodo = {
+      id: Date.now(),
+      todo: todoText.value,
+      priority: priority.value,
+      isCompleted: false,
+    };
+    emit("createTodo", newTodo);
+    // 폼 초기화
+    if (formRef.value) {
+      formRef.value.reset();
+      todoText.value = "";
+      priority.value = "p1";
+    }
   }
 };
 
@@ -104,10 +135,18 @@ const onFormClose = (e) => {
 };
 
 const onTodoDelete = (e) => {
-  console.log(e.target.value);
+  emit("deleteTodo", props.todoData.id);
 };
 
-const onTodoModify = (e) => {};
+const onTodoModify = (e) => {
+  if (validateForm()) {
+    emit("modifyTodo", {
+      ...props.todoData,
+      todo: todoText.value,
+      priority: priority.value,
+    });
+  }
+};
 </script>
 
 <style scoped>
