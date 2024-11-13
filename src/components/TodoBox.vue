@@ -44,6 +44,7 @@ const onTodoModifyOrDelete = (todo) => {
       display: flex;
       align-items: center;
       word-break: break-word;
+      margin-bottom: 8px;
       input {
         margin-right: 8px;
         width: 20px;
