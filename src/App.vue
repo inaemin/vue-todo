@@ -1,7 +1,7 @@
 <template>
   <div id="phone">
     <header>
-      <span>{{ currentHour }}:{{ currentMinute }}</span>
+      <span>{{ hours }}:{{ minutes }}</span>
       <div>
         <font-awesome-icon :icon="['fas', 'signal']" />
         <font-awesome-icon :icon="['fas', 'wifi']" />
@@ -14,10 +14,23 @@
 
 <script setup lang="ts">
 import Container from "./components/Container.vue";
+import { ref, onMounted, onUnmounted } from "vue";
 
-const now = new Date();
-const currentHour = now.getHours(); // 시
-const currentMinute = now.getMinutes(); // 분
+const hours = ref(new Date().getHours());
+const minutes = ref(new Date().getMinutes());
+let timer;
+
+onMounted(() => {
+  timer = setInterval(() => {
+    const now = new Date();
+    hours.value = now.getHours();
+    minutes.value = now.getMinutes();
+  }, 1000);
+});
+
+onUnmounted(() => {
+  clearInterval(timer);
+});
 </script>
 
 <style scoped>
