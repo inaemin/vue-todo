@@ -18,17 +18,29 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps({
-  todoData: Object,
-});
+interface Todo {
+  id: number;
+  todo: string;
+  priority: PriorityType;
+  isCompleted: boolean;
+}
 
-const emit = defineEmits(["todoComplete", "todoModifyOrDelete"]);
+type PriorityType = "p1" | "p2" | "p3" | "p4";
 
-const onClickComplete = (todo) => {
+defineProps<{
+  todoData: Todo[];
+}>();
+
+const emit = defineEmits<{
+  (e: "todoComplete", todo: Todo): void;
+  (e: "todoModifyOrDelete", todo: Todo): void;
+}>();
+
+const onClickComplete = (todo: Todo) => {
   emit("todoComplete", todo);
 };
 
-const onTodoModifyOrDelete = (todo) => {
+const onTodoModifyOrDelete = (todo: Todo) => {
   emit("todoModifyOrDelete", todo);
 };
 </script>

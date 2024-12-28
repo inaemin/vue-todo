@@ -18,7 +18,8 @@ import { ref, onMounted, onUnmounted } from "vue";
 
 const hours = ref(new Date().getHours());
 const minutes = ref(new Date().getMinutes());
-let timer;
+// NodeJS.Timer 타입으로 timer 정의
+let timer: ReturnType<typeof setInterval>;
 
 onMounted(() => {
   timer = setInterval(() => {

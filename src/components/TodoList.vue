@@ -36,36 +36,46 @@
 import TodoBox from "./TodoBox.vue";
 import { computed } from "vue";
 
-const props = defineProps({
-  todoListData: {
-    type: Array,
-    required: true,
-  },
-});
+interface Todo {
+  id: number;
+  todo: string;
+  priority: PriorityType;
+  isCompleted: boolean;
+}
 
-const emit = defineEmits(["todoComplete", "todoModifyOrDelete"]);
+type PriorityType = "p1" | "p2" | "p3" | "p4";
+
+const props = defineProps<{
+  todoListData: Todo[];
+}>();
+
+const emit = defineEmits<{
+  (e: "todoComplete", todo: Todo): void;
+  (e: "todoModifyOrDelete", todo: Todo): void;
+}>();
 
 const p1Data = computed(() =>
-  props.todoListData.filter((el) => el.priority === "p1")
+  props.todoListData.filter((el: Todo) => el.priority === "p1")
 );
 const p2Data = computed(() =>
-  props.todoListData.filter((el) => el.priority === "p2")
+  props.todoListData.filter((el: Todo) => el.priority === "p2")
 );
 const p3Data = computed(() =>
-  props.todoListData.filter((el) => el.priority === "p3")
+  props.todoListData.filter((el: Todo) => el.priority === "p3")
 );
 const p4Data = computed(() =>
-  props.todoListData.filter((el) => el.priority === "p4")
+  props.todoListData.filter((el: Todo) => el.priority === "p4")
 );
 
-const handleTodoComplete = (todo) => {
+const handleTodoComplete = (todo: Todo) => {
   emit("todoComplete", todo);
 };
 
-const handleTodoModifyOrDelete = (todo) => {
+const handleTodoModifyOrDelete = (todo: Todo) => {
   emit("todoModifyOrDelete", todo);
 };
 </script>
+
 <style>
 #todoList {
   display: grid;

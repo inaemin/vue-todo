@@ -7,7 +7,7 @@
       <div class="title">{{ priorityData[priority] }}</div>
       <div class="priority">
         <PriorityButton
-          v-for="el in ['p1', 'p2', 'p3', 'p4']"
+          v-for="el in priorityItems"
           :key="el"
           :priority="priority"
           :data="el"
@@ -55,41 +55,49 @@ import { ref } from "vue";
 import PriorityButton from "./PriorityButton.vue";
 
 interface Todo {
-  todo: string;
-  priority: string;
-  isCompleted: boolean;
   id: number;
+  todo: string;
+  priority: PriorityType;
+  isCompleted: boolean;
 }
+
+type PriorityType = "p1" | "p2" | "p3" | "p4";
 
 const props = defineProps<{
   todoData?: Todo; // optional
-  mode?: string; // optional
+  mode: string; // optional
 }>();
 
-const emit = defineEmits([
-  "formClose",
-  "createTodo",
-  "modifyTodo",
-  "deleteTodo",
-]);
+const emit = defineEmits<{
+  (e: "formClose"): void;
+  (e: "createTodo", todo: Todo): void;
+  (e: "modifyTodo", todo: Todo): void;
+  (e: "deleteTodo", id: number): void;
+}>();
 
-const priorityData = ref({
+const priorityData: Record<PriorityType, string> = {
   p1: "중요함-긴급함",
   p2: "중요함-긴급하지않음",
   p3: "중요하지않음-긴급함",
   p4: "중요하지않음-긴급하지않음",
-});
-
-const todoText = ref(props.todoData?.todo || "");
-const priority = ref(props.todoData?.priority || "p1");
-const formRef = ref(null);
-
-const onInput = (e) => {
-  todoText.value = e.target.value;
 };
 
-const onClickPriority = (e) => {
-  priority.value = e;
+const priorityItems: PriorityType[] = ["p1", "p2", "p3", "p4"];
+
+const todoText = ref(props.todoData?.todo || "");
+const priority = ref<PriorityType>(props.todoData?.priority || "p1");
+const formRef = ref<HTMLFormElement | null>(null);
+
+const onInput = (e: Event) => {
+  if (e.target instanceof HTMLInputElement) {
+    if (e.target.value) {
+      todoText.value = e.target.value;
+    }
+  }
+};
+
+const onClickPriority = (newPriority: PriorityType) => {
+  priority.value = newPriority;
 };
 
 const validateForm = () => {
@@ -97,9 +105,10 @@ const validateForm = () => {
     return true;
   }
   window.alert(`내용을 입력해주세요.`);
+  return false;
 };
 
-const onSubmit = (e) => {
+const onSubmit = () => {
   if (validateForm()) {
     const newTodo = {
       id: Date.now(),
@@ -112,7 +121,7 @@ const onSubmit = (e) => {
   }
 };
 
-const onContinueSubmit = (e) => {
+const onContinueSubmit = () => {
   if (validateForm()) {
     const newTodo = {
       id: Date.now(),
@@ -130,16 +139,17 @@ const onContinueSubmit = (e) => {
   }
 };
 
-const onFormClose = (e) => {
+const onFormClose = () => {
   emit("formClose");
 };
 
-const onTodoDelete = (e) => {
+const onTodoDelete = () => {
+  if (!props.todoData) return;
   emit("deleteTodo", props.todoData.id);
 };
 
-const onTodoModify = (e) => {
-  if (validateForm()) {
+const onTodoModify = () => {
+  if (validateForm() && props.todoData) {
     emit("modifyTodo", {
       ...props.todoData,
       todo: todoText.value,

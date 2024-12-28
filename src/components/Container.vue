@@ -27,9 +27,23 @@ import TodoList from "./TodoList.vue";
 import TodoForm from "./TodoForm.vue";
 import { ref, onMounted, watch } from "vue";
 
-const mode = ref("read"); // 'read', 'create', 'modify'
-const todoListData = ref([]);
-const selectedTodo = ref(null);
+// Todo 타입 정의
+interface Todo {
+  id: number;
+  todo: string;
+  priority: PriorityType;
+  isCompleted: boolean;
+}
+
+type PriorityType = "p1" | "p2" | "p3" | "p4";
+
+// FormMode 타입 정의
+type FormMode = "read" | "create" | "modify";
+
+// [수정] ref 변수들의 타입 명시적 지정
+const mode = ref<FormMode>("read");
+const todoListData = ref<Todo[]>([]);
+const selectedTodo = ref<Todo | undefined>(undefined);
 const LOCAL_STORAGE_KEY = "todos";
 
 // 로컬 스토리지에서 초기 데이터 로드
@@ -51,14 +65,15 @@ watch(
 
 const handleFormClose = () => {
   mode.value = "read";
-  selectedTodo.value = null;
+  selectedTodo.value = undefined;
 };
 
 const handleFormOpen = () => {
   mode.value = "create";
 };
 
-const handleCreateTodo = (newTodo) => {
+// 매개변수 타입 지정
+const handleCreateTodo = (newTodo: Todo) => {
   /**
    * todo의 데이터 구조는
    * {id: Date.now(), todo: todoData, priority: "p1", isCompleted: true}
@@ -66,18 +81,18 @@ const handleCreateTodo = (newTodo) => {
   todoListData.value.push(newTodo);
 };
 
-const handleTodoComplete = (todo) => {
+const handleTodoComplete = (todo: Todo) => {
   todoListData.value = todoListData.value.map((el) =>
     el.id === todo.id ? { ...el, isCompleted: !el.isCompleted } : el
   );
 };
 
-const handleTodoModifyOrDelete = (todo) => {
+const handleTodoModifyOrDelete = (todo: Todo) => {
   mode.value = "modify";
   selectedTodo.value = todo;
 };
 
-const handleModifyTodo = (todo) => {
+const handleModifyTodo = (todo: Todo) => {
   todoListData.value = todoListData.value.map((el) => {
     if (el.id === todo.id) {
       el.todo = todo.todo;
@@ -89,7 +104,7 @@ const handleModifyTodo = (todo) => {
   handleFormClose();
 };
 
-const handleDeleteTodo = (deleteId) => {
+const handleDeleteTodo = (deleteId: number) => {
   todoListData.value = todoListData.value.filter((el) => el.id !== deleteId);
   handleFormClose();
 };

@@ -10,12 +10,18 @@ import P2Icon from "@/assets/images/p2.svg";
 import P3Icon from "@/assets/images/p3.svg";
 import P4Icon from "@/assets/images/p4.svg";
 
-const props = defineProps({
-  priority: String,
-  data: String,
-});
+type PriorityType = "p1" | "p2" | "p3" | "p4";
 
-const icons = {
+interface IconType {
+  [key: string]: any; // SVG 컴포넌트 타입을 any로 처리
+}
+
+defineProps<{
+  priority: PriorityType;
+  data: PriorityType;
+}>();
+
+const icons: IconType = {
   p1: P1Icon,
   p2: P2Icon,
   p3: P3Icon,

@@ -28,29 +28,41 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-const props = defineProps({
-  todoListData: Array,
-});
+interface Todo {
+  id: number;
+  todo: string;
+  priority: PriorityType;
+  isCompleted: boolean;
+}
+
+type PriorityType = "p1" | "p2" | "p3" | "p4";
+
+const props = defineProps<{
+  todoListData: Todo[];
+}>();
 
 const p1NotCompleteCount = computed(
   () =>
-    props.todoListData.filter((el) => el.priority === "p1" && !el.isCompleted)
-      .length
+    props.todoListData?.filter((el) => el.priority === "p1" && !el.isCompleted)
+      ?.length ?? 0
 );
+
 const p2NotCompleteCount = computed(
   () =>
-    props.todoListData.filter((el) => el.priority === "p2" && !el.isCompleted)
-      .length
+    props.todoListData?.filter((el) => el.priority === "p2" && !el.isCompleted)
+      ?.length ?? 0
 );
+
 const p3NotCompleteCount = computed(
   () =>
-    props.todoListData.filter((el) => el.priority === "p3" && !el.isCompleted)
-      .length
+    props.todoListData?.filter((el) => el.priority === "p3" && !el.isCompleted)
+      ?.length ?? 0
 );
+
 const p4NotCompleteCount = computed(
   () =>
-    props.todoListData.filter((el) => el.priority === "p4" && !el.isCompleted)
-      .length
+    props.todoListData?.filter((el) => el.priority === "p4" && !el.isCompleted)
+      ?.length ?? 0
 );
 </script>
 
